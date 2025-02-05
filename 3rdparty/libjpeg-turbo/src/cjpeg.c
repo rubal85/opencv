@@ -39,7 +39,9 @@
 #include "cdjpeg.h"             /* Common decls for cjpeg/djpeg applications */
 #include "jversion.h"           /* for version message */
 #include "jconfigint.h"
+#include <limits.h>
 
+#define READ_BINARY "rb"
 
 /* Create the add-on message string table. */
 
@@ -698,12 +700,35 @@ main(int argc, char **argv)
 #endif /* TWO_FILE_COMMANDLINE */
 
   /* Open the input file. */
-  if (file_index < argc) {
+ /* if (file_index < argc) {
+
     if ((input_file = fopen(argv[file_index], READ_BINARY)) == NULL) {
       fprintf(stderr, "%s: can't open %s\n", progname, argv[file_index]);
       exit(EXIT_FAILURE);
     }
-  } else {
+  }*/
+  if(file_index < argc ){
+  const char *progname = argv[0];
+      int file_index = 1; // Start at 1 (the first potential filename argument)
+
+      if (argc <= 1) {
+          fprintf(stderr, "%s: No filename provided.\n", progname);
+          return EXIT_FAILURE;
+      }
+
+      if (file_index >= argc) {
+          fprintf(stderr, "%s: Invalid file index.\n", progname);
+          return EXIT_FAILURE;
+      }
+
+      char *filename = argv[file_index];
+       if (strspn(filename, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-") != strlen(filename)) {
+              fprintf(stderr, "%s: Invalid filename: %s (Only alphanumeric, underscore, period, and hyphen allowed)\n", progname, filename);
+              return EXIT_FAILURE;
+          }
+
+  }
+  else {
     /* default input file is stdin */
     input_file = read_stdin();
   }
@@ -739,7 +764,8 @@ main(int argc, char **argv)
     if (fread(icc_profile, icc_len, 1, icc_file) < 1) {
       fprintf(stderr, "%s: can't read ICC profile from %s\n", progname,
               icc_filename);
-      free(icc_profile);
+     // free(icc_profile);
+     goto cleanup;
       fclose(icc_file);
       exit(EXIT_FAILURE);
     }
@@ -834,7 +860,12 @@ main(int argc, char **argv)
     free(outbuffer);
   }
 
+ // free(icc_profile);
+ goto cleanup;
+
+  cleanup:
   free(icc_profile);
+  icc_profile = NULL;
 
   /* All done. */
   return (jerr.num_warnings ? EXIT_WARNING : EXIT_SUCCESS);

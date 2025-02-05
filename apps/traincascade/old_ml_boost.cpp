@@ -925,6 +925,7 @@ void CvBoost::prune( CvSlice slice )
             CvBoostTree* w;
             CV_READ_SEQ_ELEM( w, reader );
             delete w;
+            w = nullptr;
         }
 
         cvSeqRemoveSlice( weak, slice );
@@ -960,6 +961,7 @@ CvBoost::~CvBoost()
 {
     clear();
 }
+
 
 
 CvBoost::CvBoost( const CvMat* _train_data, int _tflag,

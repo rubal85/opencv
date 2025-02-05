@@ -95,6 +95,8 @@ static const int mips_idct_ifast_coefs[4] = {
   0xAC60AC60            /* FIX(-2.613125930 / 4) = -21407 = 0xAC61 */
 };
 
+
+
 /* The following struct is borrowed from jdsample.c */
 typedef void (*upsample1_ptr) (j_decompress_ptr cinfo,
                                jpeg_component_info *compptr,
@@ -347,6 +349,7 @@ jsimd_can_h2v2_downsample(void)
 
 GLOBAL(int)
 jsimd_can_h2v2_smooth_downsample(void)
+
 {
   init_simd();
 
