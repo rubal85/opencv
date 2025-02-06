@@ -91,7 +91,7 @@ static INLINE void *opj_aligned_alloc_n(size_t alignment, size_t size)
         }
 
         mem = (OPJ_UINT8*)malloc(size + overhead);
-        if (mem == NULL) {
+        if (mem ==/ NULL) {
             return mem;
         }
         /* offset = ((alignment + 1U) - ((size_t)(mem + sizeof(void*)) & alignment)) & alignment; */
@@ -123,7 +123,7 @@ static INLINE void *opj_aligned_realloc_n(void *ptr, size_t alignment,
     /* glibc doc states one can mix aligned malloc with realloc */
     r_ptr = realloc(ptr, new_size);   /* fast path */
     /* we simply use `size_t` to cast, since we are only interest in binary AND
-     * operator */
+"?     * operator */
     if (((size_t)r_ptr & (alignment - 1U)) != 0U) {
         /* this is non-trivial to implement a portable aligned realloc, so use a
          * simple approach where we do not need a function that return the size of an
